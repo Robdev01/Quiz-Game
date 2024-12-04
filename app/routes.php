@@ -1,11 +1,13 @@
 <?php
 
 require_once 'controllers/UserController.php';
+require_once 'controllers/QuizController.php';
 // Função de roteamento
 function route($pdo)
 {
     // Instância do controlador
     $userController = new UserController($pdo);
+    $quizController = new QuizController($pdo);
     
     // Pega o URI e o método da requisição
     $uri = $_SERVER['REQUEST_URI'];
@@ -47,15 +49,32 @@ function route($pdo)
         echo $userController->delete($id);
     }
 
-    // Rota para listar todos os usuários (GET)
-    elseif ($uri === '/users' && $requestMethod === 'GET') {
-        echo json_encode($userController->listAll());
+    // Criar quiz (POST)
+    if ($uri === '/quizzes' && $requestMethod === 'POST') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        echo $quizController->create(
+            $data['title'], 
+            $data['created_by']
+        );
     }
-    
+
+    // Listar quizzes (GET)
+    elseif ($uri === '/quizzes' && $requestMethod === 'GET') {
+        echo $quizController->listAll();
+    }
+
+    // Obter quiz por ID (GET)
+    elseif (preg_match('/^\/quizzes\/(\d+)$/', $uri, $matches) && $requestMethod === 'GET') {
+        $id = $matches[1];
+        echo $quizController->get($id);
+    }
+
     else {
         http_response_code(404);
-        echo "Rota não encontrada.";
+        echo json_encode(['status' => 'error', 'message' => 'Rota não encontrada.']);
     }
+
+
 }
 
 ?>
