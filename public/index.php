@@ -1,9 +1,13 @@
 <?php
 
-require_once '../app/routes.php';
+// Inclui o arquivo de rotas e os controladores
+require_once __DIR__ . '/../app/routes.php';
+require_once __DIR__ . '/../app/controllers/AdminController.php';
+require_once __DIR__ . '/../app/controllers/QuizController.php';
+require_once __DIR__ . '/../app/controllers/UserController.php';
 
 // Carrega as configurações de banco de dados
-$config = require '../app/config.php';
+$config = require __DIR__ . '/../app/config.php';
 
 // Inicia conexão com o banco usando os dados do config.php
 try {
@@ -18,5 +22,5 @@ try {
     die('Erro ao conectar ao banco de dados: ' . $e->getMessage());
 }
 
-// Roteia a requisição
+// Roteia a requisição passando a conexão com o banco para o arquivo de rotas
 route($pdo);
