@@ -1,45 +1,34 @@
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255),
-    is_admin BOOLEAN NOT NULL DEFAULT FALSE
-);
+create database quiz_game_api;
+use quiz_game_api;
+
 
 CREATE TABLE quizzes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    created_by INT NOT NULL,
-    FOREIGN KEY (created_by) REFERENCES users(id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE questions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     quiz_id INT NOT NULL,
-    text TEXT NOT NULL,
-    image_path VARCHAR(255),
-    FOREIGN KEY (quiz_id) REFERENCES quizzes(id)
+    question_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
 );
 
-CREATE TABLE participants (
+CREATE TABLE quiz_answers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    quiz_id INT NOT NULL,
+    user_id INT NOT NULL,
+    answer TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quiz_id) REFERENCES quizzes(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE
-);
-
-CREATE TABLE responses (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    participant_id INT NOT NULL,
-    question_id INT NOT NULL,
-    selected_answer BOOLEAN NOT NULL,
-    is_correct BOOLEAN NOT NULL,
-    FOREIGN KEY (participant_id) REFERENCES participants(id),
-    FOREIGN KEY (question_id) REFERENCES questions(id)
-);
-
-CREATE TABLE ranking (
-    participant_id INT NOT NULL,
-    points INT NOT NULL,
-    PRIMARY KEY (participant_id),
-    FOREIGN KEY (participant_id) REFERENCES participants(id)
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
