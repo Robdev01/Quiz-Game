@@ -3,7 +3,7 @@
 return [
     'db' => [
         'host' => 'localhost',
-        'dbname' => 'quiz_game',
+        'dbname' => 'quiz_game_api',
         'user' => 'root',
         'password' => '',
     ]

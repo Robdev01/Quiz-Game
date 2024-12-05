@@ -1,80 +1,61 @@
 <?php
 
-require_once 'controllers/UserController.php';
-require_once 'controllers/QuizController.php';
-// Função de roteamento
-function route($pdo)
-{
-    // Instância do controlador
-    $userController = new UserController($pdo);
-    $quizController = new QuizController($pdo);
-    
-    // Pega o URI e o método da requisição
-    $uri = $_SERVER['REQUEST_URI'];
-    $requestMethod = $_SERVER['REQUEST_METHOD'];
-    
-    // Rota para criar um usuário (POST)
-    if ($uri === '/users' && $requestMethod === 'POST') {
-        $data = json_decode(file_get_contents("php://input"), true);
-        echo $userController->create(
-            $data['name'], 
-            $data['email'], 
-            $data['password'], 
-            isset($data['is_admin']) ? $data['is_admin'] : false
-        );
-    }
-    
-    // Rota para obter um usuário (GET)
-    elseif (preg_match('/^\/users\/(\d+)$/', $uri, $matches) && $requestMethod === 'GET') {
-        $id = $matches[1];
-        echo json_encode($userController->get($id));
-    }
-    
-    // Rota para atualizar um usuário (PUT)
-    elseif (preg_match('/^\/users\/(\d+)$/', $uri, $matches) && $requestMethod === 'PUT') {
-        $id = $matches[1];
-        $data = json_decode(file_get_contents("php://input"), true);
-        echo $userController->update(
-            $id, 
-            $data['name'], 
-            $data['email'], 
-            isset($data['password']) ? $data['password'] : null,
-            isset($data['is_admin']) ? $data['is_admin'] : false
-        );
-    }
-    
-    // Rota para deletar um usuário (DELETE)
-    elseif (preg_match('/^\/users\/(\d+)$/', $uri, $matches) && $requestMethod === 'DELETE') {
-        $id = $matches[1];
-        echo $userController->delete($id);
-    }
+use App\Controllers\AdminController;
+use App\Controllers\QuizController;
+use App\Controllers\UserController;
 
-    // Criar quiz (POST)
-    if ($uri === '/quizzes' && $requestMethod === 'POST') {
-        $data = json_decode(file_get_contents("php://input"), true);
-        echo $quizController->create(
-            $data['title'], 
-            $data['created_by']
-        );
+function route($pdo) {
+    // Define o cabeçalho padrão para resposta JSON
+    header('Content-Type: application/json');
+
+    // Normaliza a URI removendo barra extra no final
+    $uri = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+    $method = $_SERVER['REQUEST_METHOD'];
+
+    // Roteamento básico
+    switch (true) {
+        // Admin
+        case $uri === '/admin/login' && $method === 'POST':
+            $controller = new AdminController($pdo); // Passa o PDO
+            $controller->login();
+            break;
+
+        // Quiz
+        case $uri === '/quizzes' && $method === 'POST':
+            $controller = new QuizController($pdo); // Passa o PDO para o controlador
+            $controller->create();
+            break;
+        case preg_match('/^\/quizzes\/(\d+)$/', $uri, $matches) && $method === 'PUT':
+            $quizId = $matches[1];
+            $controller = new QuizController($pdo); // Passa o PDO para o controlador
+            $controller->update($quizId);
+            break;
+        case preg_match('/^\/quizzes\/(\d+)$/', $uri, $matches) && $method === 'DELETE':
+            $quizId = $matches[1];
+            $controller = new QuizController($pdo);
+            $controller->delete($quizId);
+            break;
+
+        // Usuários
+        case $uri === '/users/register' && $method === 'POST':
+            $controller = new UserController($pdo);
+            $controller->register();
+            break;
+        case $uri === '/users/ranking' && $method === 'GET':
+            $controller = new UserController($pdo);
+            $controller->getRanking();
+            break;
+
+        // Participação
+        case preg_match('/^\/quizzes\/(\d+)\/answer$/', $uri, $matches) && $method === 'POST':
+            $quizId = $matches[1];
+            $controller = new QuizController($pdo);
+            break;
+
+        // Rota não encontrada
+        default:
+            http_response_code(404);
+            echo json_encode(['status' => 'error', 'message' => 'Route not found']);
+            break;
     }
-
-    // Listar quizzes (GET)
-    elseif ($uri === '/quizzes' && $requestMethod === 'GET') {
-        echo $quizController->listAll();
-    }
-
-    // Obter quiz por ID (GET)
-    elseif (preg_match('/^\/quizzes\/(\d+)$/', $uri, $matches) && $requestMethod === 'GET') {
-        $id = $matches[1];
-        echo $quizController->get($id);
-    }
-
-    else {
-        http_response_code(404);
-        echo json_encode(['status' => 'error', 'message' => 'Rota não encontrada.']);
-    }
-
-
 }
-
-?>

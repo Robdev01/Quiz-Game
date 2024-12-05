@@ -1,92 +1,112 @@
 <?php
 
-class QuizController
-{
+namespace App\Controllers;
+
+class QuizController {
     private $pdo;
 
-    public function __construct($pdo)
-    {
+    public function __construct($pdo) {
         $this->pdo = $pdo;
     }
 
-    // Cria um novo quiz
-    public function create($title, $createdBy)
-    {
-        if (empty($title)) {
-            return json_encode(['status' => 'error', 'message' => 'O título é obrigatório.']);
-        }
+    // Criar um novo quiz
+    public function create() {
+        $data = json_decode(file_get_contents('php://input'), true);
 
-        if (empty($createdBy)) {
-            return json_encode(['status' => 'error', 'message' => 'O criador do quiz é obrigatório.']);
-        }
+        $title = $data['title'] ?? null;
+        $questions = $data['questions'] ?? [];
 
-        $sql = "INSERT INTO quizzes (title, created_by) VALUES (:title, :created_by)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':title', $title);
-        $stmt->bindParam(':created_by', $createdBy);
+        if (!$title || empty($questions)) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Title and questions are required']);
+            return;
+        }
 
         try {
-            $stmt->execute();
-            return json_encode(['status' => 'success', 'message' => 'Quiz criado com sucesso!']);
-        } catch (PDOException $e) {
-            return json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        }
-    }
+            $this->pdo->beginTransaction();
 
-    // Lista todos os quizzes com informações do criador
-    public function listAll()
-    {
-        $sql = "
-            SELECT 
-                q.id, 
-                q.title, 
-                q.created_by, 
-                u.name AS creator_name
-            FROM 
-                quizzes q
-            JOIN 
-                users u ON q.created_by = u.id
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
+            // Inserir o quiz
+            $stmt = $this->pdo->prepare('INSERT INTO quizzes (title) VALUES (:title)');
+            $stmt->execute(['title' => $title]);
+            $quizId = $this->pdo->lastInsertId();
 
-        return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-    }
-
-    // Obter quiz por ID
-    public function get($id)
-    {
-        if (empty($id)) {
-            return json_encode(['status' => 'error', 'message' => 'O ID do quiz é obrigatório.']);
-        }
-
-        $sql = "
-            SELECT 
-                q.id, 
-                q.title, 
-                q.created_by, 
-                u.name AS creator_name
-            FROM 
-                quizzes q
-            JOIN 
-                users u ON q.created_by = u.id
-            WHERE 
-                q.id = :id
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':id', $id);
-
-        try {
-            $stmt->execute();
-            $quiz = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($quiz) {
-                return json_encode($quiz);
-            } else {
-                return json_encode(['status' => 'error', 'message' => 'Quiz não encontrado.']);
+            // Inserir perguntas
+            $stmt = $this->pdo->prepare('INSERT INTO questions (quiz_id, question_text) VALUES (:quiz_id, :question_text)');
+            foreach ($questions as $question) {
+                $stmt->execute([
+                    'quiz_id' => $quizId,
+                    'question_text' => $question['question_text']
+                ]);
             }
-        } catch (PDOException $e) {
-            return json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+
+            $this->pdo->commit();
+
+            http_response_code(201);
+            echo json_encode(['status' => 'success', 'message' => 'Quiz created successfully']);
+        } catch (\Exception $e) {
+            $this->pdo->rollBack();
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => 'Failed to create quiz', 'error' => $e->getMessage()]);
         }
     }
+
+    // Atualizar um quiz existente
+    public function update($quizId) {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $title = $data['title'] ?? null;
+        $questions = $data['questions'] ?? [];
+
+        if (!$title || empty($questions)) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Title and questions are required']);
+            return;
+        }
+
+        try {
+            $this->pdo->beginTransaction();
+
+            // Atualizar o título do quiz
+            $stmt = $this->pdo->prepare('UPDATE quizzes SET title = :title WHERE id = :id');
+            $stmt->execute(['title' => $title, 'id' => $quizId]);
+
+            // Remover perguntas antigas
+            $stmt = $this->pdo->prepare('DELETE FROM questions WHERE quiz_id = :quiz_id');
+            $stmt->execute(['quiz_id' => $quizId]);
+
+            // Inserir novas perguntas
+            $stmt = $this->pdo->prepare('INSERT INTO questions (quiz_id, question_text) VALUES (:quiz_id, :question_text)');
+            foreach ($questions as $question) {
+                $stmt->execute([
+                    'quiz_id' => $quizId,
+                    'question_text' => $question['question_text']
+                ]);
+            }
+
+            $this->pdo->commit();
+
+            http_response_code(200);
+            echo json_encode(['status' => 'success', 'message' => 'Quiz updated successfully']);
+        } catch (\Exception $e) {
+            $this->pdo->rollBack();
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => 'Failed to update quiz', 'error' => $e->getMessage()]);
+        }
+    }
+
+    // Deletar um quiz
+    public function delete($quizId) {
+        try {
+            // Deletar o quiz e suas perguntas
+            $stmt = $this->pdo->prepare('DELETE FROM quizzes WHERE id = :id');
+            $stmt->execute(['id' => $quizId]);
+
+            http_response_code(200);
+            echo json_encode(['status' => 'success', 'message' => 'Quiz deleted successfully']);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => 'Failed to delete quiz', 'error' => $e->getMessage()]);
+        }
+    }
+    
 }
-?>
