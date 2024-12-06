@@ -10,6 +10,7 @@
     <div class="dashboard-container">
         <h1>Painel do Administrador</h1>
         
+        <!-- Seção de Cadastro de Quiz -->
         <section class="quiz-form-section">
             <h2>Cadastrar Novo Quiz</h2>
             <form id="quiz-form">
@@ -19,6 +20,7 @@
             </form>
         </section>
         
+        <!-- Seção de Quizzes Cadastrados -->
         <section class="quiz-list-section">
             <h2>Quizzes Cadastrados</h2>
             <table>
@@ -35,6 +37,26 @@
                 </tbody>
             </table>
         </section>
+
+        <!-- Seção de Usuários Cadastrados -->
+        <section class="user-list-section">
+            <h2>Usuários Cadastrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Função</th>
+                        <th>Criado em</th>
+                    </tr>
+                </thead>
+                <tbody id="user-list">
+                    <!-- Os usuários serão carregados aqui dinamicamente -->
+                </tbody>
+            </table>
+        </section>
+
     </div>
 
     <script src="/Quiz-Game/Quiz-front/js/admin-dashboard.js"></script>

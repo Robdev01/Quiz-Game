@@ -71,6 +71,12 @@ tbody td {
 tbody tr:hover {
     background-color: #f1f1f1;
 }
+.tabs {
+    display: flex;
+    justify-content: center; /* Alinha os botões horizontalmente no centro */
+    gap: 20px; /* Espaçamento entre os botões */
+    margin-bottom: 20px; /* Espaçamento abaixo dos botões */
+}
 
 .actions button {
     margin: 0 5px;
@@ -78,3 +84,15 @@ tbody tr:hover {
     font-size: 14px;
     cursor: pointer;
 }
+.tabs button {
+    padding: 10px 20px; /* Espaçamento interno nos botões */
+    font-size: 16px; /* Tamanho da fonte */
+    border: none; /* Remover borda padrão */
+    cursor: pointer; /* Mostrar cursor como ponteiro */
+    background-color: #1c488e; /* Cor de fundo padrão */
+    transition: background-color 0.3s ease; /* Transição suave para efeito de hover */
+    border-radius: 5px; /* Bordas arredondadas nos botões */
+}
+
+
+
