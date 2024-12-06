@@ -23,7 +23,7 @@ document.getElementById('register-admin-form').addEventListener('submit', async 
         const data = await response.json();  // A API retornará uma resposta em formato JSON
         if (response.ok) {
             // Se a resposta for bem-sucedida, redireciona para a tela de login
-            window.location.href = 'login.html';  // Redireciona para a tela de login
+            window.location.href = 'login-admin.html';  // Redireciona para a tela de login
         } else {
             // Caso contrário, exibe a mensagem de erro
             document.getElementById('message').textContent = data.message || 'Erro ao cadastrar. Tente novamente.';
