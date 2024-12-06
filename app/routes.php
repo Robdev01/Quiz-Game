@@ -12,6 +12,13 @@ function route($pdo) {
     $uri = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
     $method = $_SERVER['REQUEST_METHOD'];
 
+     // Ignorar a requisição para favicon.ico
+     $uri = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+     if ($uri === '/favicon.ico') {
+         http_response_code(204); // Sem conteúdo
+         exit();
+     }
+
     // Roteamento básico
     switch (true) {
         // Admin    

@@ -1,4 +1,18 @@
 <?php
+// Permitir qualquer origem
+header('Access-Control-Allow-Origin: *');
+
+// Permitir métodos
+header('Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS');
+
+// Permitir cabeçalhos
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+// Verificar se o método é OPTIONS e retornar imediatamente
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 // Inclui o arquivo de rotas e os controladores
 require_once __DIR__ . '/../app/routes.php';
