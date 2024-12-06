@@ -8,7 +8,6 @@ document.getElementById('register-form').addEventListener('submit', async functi
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const role = document.getElementById('role').value;
 
     try {
         // Envia os dados para a API usando fetch
@@ -17,14 +16,14 @@ document.getElementById('register-form').addEventListener('submit', async functi
             headers: {
                 'Content-Type': 'application/json'  // Define o tipo de conteúdo como JSON
             },
-            body: JSON.stringify({ name, email, password, role })  // Converte o objeto em JSON
+            body: JSON.stringify({ name, email, password })  // Converte o objeto em JSON
         });
 
         const data = await response.json();  // A API retornará uma resposta em formato JSON
 
         if (response.ok) {
             // Se a resposta for bem-sucedida, redireciona para a página de login
-            window.location.href = 'login.html';  // Redireciona para a tela de login
+            window.location.href = 'login-user.html';  // Redireciona para a tela de login
         } else {
             // Caso contrário, exibe a mensagem de erro
             document.getElementById('message').textContent = data.message || 'Erro ao cadastrar. Tente novamente.';

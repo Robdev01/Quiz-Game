@@ -49,7 +49,7 @@ function route($pdo) {
             break;
         
         // Quiz
-        case $uri === '/quizzes' && $method === 'POST':
+        case $uri === '/quizzes/criar' && $method === 'POST':
             $controller = new QuizController($pdo); // Passa o PDO para o controlador
             $controller->create();
             break;
@@ -62,6 +62,11 @@ function route($pdo) {
             $quizId = $matches[1];
             $controller = new QuizController($pdo);
             $controller->delete($quizId);
+            break;
+
+        case $uri === 'quizzes/todos' && $method === 'GET':
+            $controller = new QuizController($pdo);
+            $controller->getAll();
             break;
 
         // Usuários

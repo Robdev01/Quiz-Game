@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Controllers;
+use PDOException;
+
 
 class AdminController {
     private $pdo;
@@ -36,7 +38,7 @@ class AdminController {
             ]);
 
             echo json_encode(['status' => 'success', 'message' => 'Admin registered successfully']);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             if ($e->errorInfo[1] == 1062) { // Duplicate entry
                 http_response_code(409);
                 echo json_encode(['status' => 'error', 'message' => 'Email already exists']);
@@ -48,34 +50,59 @@ class AdminController {
     }
 
     // Login de administradores
-    public function login() {
-        $data = json_decode(file_get_contents('php://input'), true);
+   // Login de administradores
+public function login() {
+    $data = json_decode(file_get_contents('php://input'), true);
 
-        $email = $data['email'] ?? null;
-        $password = $data['password'] ?? null;
+    $email = $data['email'] ?? null;
+    $password = $data['password'] ?? null;
 
-        if (!$email || !$password) {
-            http_response_code(400);
-            echo json_encode(['status' => 'error', 'message' => 'Email and password are required']);
-            return;
-        }
+    if (!$email || !$password) {
+        http_response_code(400);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Email e senha são obrigatórios'
+        ]);
+        return;
+    }
 
+    try {
+        // Busca o administrador no banco de dados
         $stmt = $this->pdo->prepare('SELECT * FROM users WHERE email = :email AND role = :role');
         $stmt->execute([
             'email' => $email,
-            'role' => 'admin', // Apenas administradores
+            'role' => 'admin', // Filtra apenas administradores
         ]);
 
         $admin = $stmt->fetch();
 
+        // Verifica se o usuário foi encontrado e se a senha está correta
         if (!$admin || !password_verify($password, $admin['password_hash'])) {
             http_response_code(401);
-            echo json_encode(['status' => 'error', 'message' => 'Invalid credentials']);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Credenciais inválidas'
+            ]);
             return;
         }
 
-        echo json_encode(['status' => 'success', 'message' => 'Login successful']);
+        // Sucesso no login
+        http_response_code(200);
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Login realizado com sucesso',
+            'role' => $admin['role'] // Inclui o papel no retorno
+        ]);
+    } catch (PDOException $e) {
+        // Erro ao conectar ao banco de dados
+        http_response_code(500);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Erro no servidor: ' . $e->getMessage()
+        ]);
     }
+}
+
     // Método GET - Para obter dados do administrador
     public function get($id) {
         // Verifique se o ID é válido

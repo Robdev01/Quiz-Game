@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/Quiz-Game/Quiz-front/css/admin-dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Painel do Administrador</h1>
+        
+        <section class="quiz-form-section">
+            <h2>Cadastrar Novo Quiz</h2>
+            <form id="quiz-form">
+                <input type="text" id="quiz-title" placeholder="Título do Quiz" required>
+                <textarea id="quiz-description" placeholder="Descrição do Quiz" required></textarea>
+                <button type="submit">Cadastrar Quiz</button>
+            </form>
+        </section>
+        
+        <section class="quiz-list-section">
+            <h2>Quizzes Cadastrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Descrição</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="quiz-list">
+                    <!-- Os quizzes serão carregados aqui dinamicamente -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <script src="/Quiz-Game/Quiz-front/js/admin-dashboard.js"></script>
+</body>
+</html>

@@ -1,32 +1,58 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     text-align: center;
-    padding: 50px;
 }
 
-h1 {
+.container {
+    max-width: 600px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
     font-size: 36px;
-    color: #4CAF50;
-    margin-bottom: 20px;
+    color: #1c488e;
+    margin-bottom: 10px;
 }
 
-p {
+.header p {
     font-size: 20px;
     color: #555;
 }
 
-button {
+.image-container {
+    margin: 20px 0;
+}
+
+.image-container img {
+    width: 100%;
+    height: 350px; /* Define a altura da imagem */
+    border-radius: 100px; /* Torna a imagem redonda */
+    border: 3px solid #1c488e; /* Adiciona uma borda arredondada */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adiciona sombra para destaque */
+    margin: 20px auto; /* Centraliza a imagem na div */
+}
+
+.buttons button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #4CAF50;
+    background-color: #1c488e;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 20px;
+    margin: 10px;
 }
 
-button:hover {
-    background-color: #45a049;
+.buttons button:hover {
+    background-color: #03255c;
 }

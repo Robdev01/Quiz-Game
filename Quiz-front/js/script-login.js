@@ -24,7 +24,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
             localStorage.setItem('auth_token', data.token);  // Armazena o token de autenticação
 
             // Redireciona para a página inicial ou o painel de quiz
-            window.location.href = '/quiz.html';  // Você pode redirecionar para a página do quiz
+            window.location.href = 'quiz.html';  // Você pode redirecionar para a página do quiz
         } else {
             // Caso contrário, exibe a mensagem de erro
             document.getElementById('message').textContent = data.message || 'Erro ao fazer login. Tente novamente.';

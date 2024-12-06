@@ -4,23 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="/Quiz-Game/Quiz-front/css/style.css">
+    <link rel="stylesheet" href="/Quiz-Game/Quiz-front/css/admin.css">
 </head>
 <body>
 
-    <h2>Login</h2>
-    <form id="login-form">
-        <input type="text" id="username" placeholder="Username ou Email" required>
-        <input type="password" id="password" placeholder="Senha" required>
-        <button type="submit">Login</button>
-    </form>
+    <div class="form-container">
+        <div class="image-container">
+            <a href="/Quiz-Game/Quiz-front/index.html">
+            <img src="/Quiz-Game/Quiz-front/imagens/Quiz br (200 x 250 px).png" alt="Usuário">
+        </a>
+        </div>
+        <h2>Login Usuário</h2>
+        <form id="login-form">
+            <input type="text" id="username" placeholder="Username ou Email" required>
+            <input type="password" id="password" placeholder="Senha" required>
+            <button type="submit">Login</button>
+        </form>
 
-    <div id="message" class="message"></div>
+        <div id="message" class="message"></div>
 
-    <!-- Link para a tela de cadastro -->
-    <div style="text-align: center; margin-top: 20px;">
-        <p>Ainda não tem uma conta?</p>
-        <a href="register-user.html">Cadastre-se aqui</a>
+        <!-- Link para a tela de cadastro -->
+        <div class="redirect">
+            <p>Ainda não tem uma conta?</p>
+            <a href="register-user.html">Cadastre-se aqui</a>
+        </div>
     </div>
 
     <script src="/Quiz-Game/Quiz-front/js/script-login.js"></script>
