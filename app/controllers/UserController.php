@@ -73,8 +73,14 @@ class UserController {
             echo json_encode(['status' => 'error', 'message' => 'Invalid credentials']);
             return;
         }
+        // Sucesso no login
+        http_response_code(200);
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Login realizado com sucesso',
+            'role' => $user['role'] // Inclui o papel no retorno
+        ]);
 
-        echo json_encode(['status' => 'success', 'message' => 'Login successful']);
     }
     // Método GET - Para obter dados do usuário
     public function get($id) {

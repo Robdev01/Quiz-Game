@@ -1,49 +1,36 @@
-document.getElementById('login-admin-form').addEventListener('submit', async function (event) {
-    event.preventDefault(); // Previne o comportamento padrão do formulário
-
-    // Captura os valores dos campos de email e senha
+// register-admin.js - Arquivo Externo
+document.getElementById('register-admin-form').addEventListener('submit', async function(event) {
+    event.preventDefault();  // Previne o envio padrão do formulário
+    // Coleta os valores dos campos do formulário
+    const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-
-    // URL da API, usando variável de ambiente para flexibilidade entre produção/desenvolvimento
-    const apiUrl = 'http://localhost:8000'; // Pode ser ajustado para usar variáveis de ambiente
-
-    // Campo de mensagem para exibir erros ou feedback ao usuário
-    const messageField = document.getElementById('message');
-
+    const confirmPassword = document.getElementById('confirm-password').value;
+    // Verifica se as senhas são iguais
+    if (password !== confirmPassword) {
+        document.getElementById('message').textContent = 'As senhas não coincidem. Tente novamente.';
+        return;
+    }
     try {
-        // Realiza a requisição para a API
-        const response = await fetch(`${apiUrl}/admins/login`, {
+        // Envia os dados para a API usando fetch
+        const response = await fetch('http://localhost:8000/admins/register', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json'  // Define o tipo de conteúdo como JSON
             },
-            body: JSON.stringify({ email, password }) // Envia os dados do login
+            body: JSON.stringify({ name, email, password})  // Envia o role como 'admin'
         });
-
-        // Processa a resposta da API
-        const data = await response.json();
-        console.log('Resposta da API:', data); // Para debug
-
+        const data = await response.json();  // A API retornará uma resposta em formato JSON
         if (response.ok) {
-            // Se o login foi bem-sucedido e o usuário é administrador
-            if (data.role === 'admin') {
-                // Redireciona para o painel administrativo
-                window.location.href = 'admin-dashboard.html';
-            } else {
-                // Exibe mensagem se o usuário não tiver permissões de administrador
-                messageField.textContent = 'Você não tem permissão de administrador.';
-                messageField.style.color = 'red';
-            }
+            // Se a resposta for bem-sucedida, redireciona para a tela de login
+            window.location.href = 'login.html';  // Redireciona para a tela de login
         } else {
-            // Trata erros específicos retornados pela API
-            messageField.textContent = data.message || 'Erro ao fazer login. Tente novamente.';
-            messageField.style.color = 'red';
+            // Caso contrário, exibe a mensagem de erro
+            document.getElementById('message').textContent = data.message || 'Erro ao cadastrar. Tente novamente.';
         }
     } catch (error) {
-        // Lida com erros inesperados, como falha na conexão com a API
+        // Caso haja um erro na requisição
         console.error('Erro ao fazer requisição para a API:', error);
-        messageField.textContent = 'Erro ao conectar com a API. Verifique sua conexão.';
-        messageField.style.color = 'red';
+        document.getElementById('message').textContent = 'Erro ao conectar com a API. Tente novamente.';
     }
 });

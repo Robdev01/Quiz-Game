@@ -1,11 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Quiz</title>
+    <link rel="stylesheet" href="/Quiz-Game/Quiz-front/css/quiz.css">
 </head>
 <body>
-    
+
+    <div class="container">
+        <h1>Quiz Game</h1>
+        
+        <!-- Exibição de quizzes -->
+        <div id="quiz-list" class="quiz-list">
+            <p>Carregando quizzes...</p>
+        </div>
+        
+        <div id="quiz-container" class="quiz-container" style="display: none;">
+            <h2 id="quiz-title"></h2>
+            <div id="questions-list"></div>
+            <button id="finish-quiz">Finalizar Quiz</button>
+        </div>
+    </div>
+
+    <script src="/Quiz-Game/Quiz-front/js/quiz.js"></script>
 </body>
 </html>

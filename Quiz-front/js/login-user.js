@@ -1,5 +1,3 @@
-// login.js - Arquivo Externo
-
 document.getElementById('login-form').addEventListener('submit', async function(event) {
     event.preventDefault();  // Previne o envio padrão do formulário
 
@@ -14,17 +12,18 @@ document.getElementById('login-form').addEventListener('submit', async function(
             headers: {
                 'Content-Type': 'application/json'  // Define o tipo de conteúdo como JSON
             },
-            body: JSON.stringify({ email, password })  // Converte o objeto em JSON
+            body: JSON.stringify({ email, password })
         });
 
-        const data = await response.json();  // A API retornará uma resposta em formato JSON
+        const data = await response.json();
+        console.log(data); // Debug do retorno da API
 
         if (response.ok) {
             // Se a resposta for bem-sucedida, armazena o token no localStorage (por exemplo)
-            localStorage.setItem('auth_token', data.token);  // Armazena o token de autenticação
-
-            // Redireciona para a página inicial ou o painel de quiz
-            window.location.href = 'quiz.html';  // Você pode redirecionar para a página do quiz
+            if (data.role === 'user') {  // Verifica se o token foi retornado
+                 // Redireciona para a página inicial ou o painel de quiz
+                window.location.href = 'quiz.html';  // Você pode redirecionar para a página do quiz
+            } 
         } else {
             // Caso contrário, exibe a mensagem de erro
             document.getElementById('message').textContent = data.message || 'Erro ao fazer login. Tente novamente.';

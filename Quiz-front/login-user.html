@@ -11,13 +11,18 @@
     <div class="form-container">
         <div class="image-container">
             <a href="/Quiz-Game/Quiz-front/index.html">
-            <img src="/Quiz-Game/Quiz-front/imagens/Quiz br (200 x 250 px).png" alt="Usuário">
-        </a>
+                <img src="/Quiz-Game/Quiz-front/imagens/Quiz br (200 x 250 px).png" alt="Usuário">
+            </a>
         </div>
         <h2>Login Usuário</h2>
         <form id="login-form">
-            <input type="text" id="username" placeholder="Username ou Email" required>
+            <!-- Alteração do ID para email -->
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Email" required>
+
+            <label for="password">Senha</label>
             <input type="password" id="password" placeholder="Senha" required>
+
             <button type="submit">Login</button>
         </form>
 
@@ -30,7 +35,7 @@
         </div>
     </div>
 
-    <script src="/Quiz-Game/Quiz-front/js/script-login.js"></script>
+    <script src="/Quiz-Game/Quiz-front/js/login-user.js"></script>
 
 </body>
 </html>
