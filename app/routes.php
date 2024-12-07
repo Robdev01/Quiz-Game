@@ -3,6 +3,7 @@
 use App\Controllers\AdminController;
 use App\Controllers\QuizController;
 use App\Controllers\UserController;
+use App\Controllers\QuestionController;
 
 function route($pdo) {
     // Define o cabeçalho padrão para resposta JSON
@@ -48,26 +49,63 @@ function route($pdo) {
             $controller->getAll();
             break;
         
-        // Quiz
-        case $uri === '/quizzes/criar' && $method === 'POST':
-            $controller = new QuizController($pdo); // Passa o PDO para o controlador
-            $controller->create();
-            break;
-        case preg_match('/^\/quizzes\/(\d+)$/', $uri, $matches) && $method === 'PUT':
-            $quizId = $matches[1];
-            $controller = new QuizController($pdo); // Passa o PDO para o controlador
-            $controller->update($quizId);
-            break;
-        case preg_match('/^\/quizzes\/(\d+)$/', $uri, $matches) && $method === 'DELETE':
-            $quizId = $matches[1];
-            $controller = new QuizController($pdo);
-            $controller->delete($quizId);
-            break;
+       // **Quizzes**
+    case $uri === '/quizzes/criar' && $method === 'POST':
+        $controller = new QuizController($pdo);
+        $controller->create();
+        break;
 
-        case $uri === 'quizzes/todos' && $method === 'GET':
-            $controller = new QuizController($pdo);
-            $controller->getAll();
-            break;
+    case preg_match('/^\/quizzes\/(\d+)$/', $uri, $matches) && $method === 'PUT':
+        $quizId = $matches[1];
+        $controller = new QuizController($pdo);
+        $controller->update($quizId);
+        break;
+
+    case preg_match('/^\/quizzes\/(\d+)$/', $uri, $matches) && $method === 'DELETE':
+        $quizId = $matches[1];
+        $controller = new QuizController($pdo);
+        $controller->delete($quizId);
+        break;
+
+    case $uri === '/quizzes/todos' && $method === 'GET':
+        $controller = new QuizController($pdo);
+        $controller->getAll();
+        break;
+
+    case preg_match('/^\/quizzes\/(\d+)$/', $uri, $matches) && $method === 'GET':
+        $quizId = $matches[1];
+        $controller = new QuizController($pdo);
+        $controller->get($quizId);
+        break;
+
+    // **Questions**
+    case $uri === '/questions/criar' && $method === 'POST':
+        $controller = new QuestionController($pdo);
+        $controller->create();
+        break;
+
+    case preg_match('/^\/questions\/(\d+)$/', $uri, $matches) && $method === 'PUT':
+        $questionId = $matches[1];
+        $controller = new QuestionController($pdo);
+        $controller->update($questionId);
+        break;
+
+    case preg_match('/^\/questions\/(\d+)$/', $uri, $matches) && $method === 'DELETE':
+        $questionId = $matches[1];
+        $controller = new QuestionController($pdo);
+        $controller->delete($questionId);
+        break;
+
+    case $uri === '/questions/todas' && $method === 'GET':
+        $controller = new QuestionController($pdo);
+        $controller->getAll();
+        break;
+
+    case preg_match('/^\/questions\/(\d+)$/', $uri, $matches) && $method === 'GET':
+        $questionId = $matches[1];
+        $controller = new QuestionController($pdo);
+        $controller->get($questionId);
+        break;
 
         // Usuários
         case $uri === '/users/register' && $method === 'POST':

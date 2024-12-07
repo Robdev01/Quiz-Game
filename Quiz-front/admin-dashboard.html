@@ -12,26 +12,43 @@
         
         <!-- Seção de Cadastro de Quiz -->
         <section class="quiz-form-section">
-            <h2>Cadastrar Novo Quiz</h2>
-            <form id="quiz-form">
-                <input type="text" id="quiz-title" placeholder="Título do Quiz" required>
-                <textarea id="quiz-description" placeholder="Descrição do Quiz" required></textarea>
-                <button type="submit">Cadastrar Quiz</button>
-            </form>
+            <div class="container">
+                <h1>Cadastrar Quiz</h1>
+                <form id="quizForm">
+                    <label for="quizTitle">Título do Quiz:</label>
+                    <input type="text" id="quizTitle" name="quizTitle" required>
+                    <button type="submit">Cadastrar Quiz</button>
+                </form>
+        
+                <h1>Cadastrar Pergunta</h1>
+                <form id="questionForm">
+                    <label for="quizId">Selecione o Quiz:</label>
+                    <select id="quizId" name="quizId" required>
+                        <!-- Opções de quizzes serão carregadas aqui dinamicamente -->
+                    </select>
+        
+                    <label for="questionText">Texto da Pergunta:</label>
+                    <textarea id="questionText" name="questionText" required></textarea>
+        
+                    <label for="answer">Resposta:</label>
+                    <input type="text" id="answer" name="answer" required>
+        
+                    <button type="submit">Cadastrar Pergunta</button>
+                </form>
+            </div>
         </section>
         
         <!-- Seção de Quizzes Cadastrados -->
-        <section class="quiz-list-section">
-            <h2>Quizzes Cadastrados</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Título</th>
-                        <th>Descrição</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
+        <table id="quizTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Descrição</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
                 <tbody id="quiz-list">
                     <!-- Os quizzes serão carregados aqui dinamicamente -->
                 </tbody>

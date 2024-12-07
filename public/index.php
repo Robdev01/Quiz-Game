@@ -19,6 +19,7 @@ require_once __DIR__ . '/../app/routes.php';
 require_once __DIR__ . '/../app/controllers/AdminController.php';
 require_once __DIR__ . '/../app/controllers/QuizController.php';
 require_once __DIR__ . '/../app/controllers/UserController.php';
+require_once __DIR__ . '/../app/controllers/QuestionController.php';
 
 // Carrega as configurações de banco de dados
 $config = require __DIR__ . '/../app/config.php';
