@@ -23,7 +23,7 @@ header {
 
 #quiz-title {
     font-size: 2em;
-    color: #5a67d8;
+    color: #1c488e;
 }
 
 #quiz-details {
@@ -49,7 +49,7 @@ button {
     display: block;
     margin: 20px auto 0;
     padding: 10px 20px;
-    background-color: #5a67d8;
+    background-color: #1c488e;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -57,5 +57,5 @@ button {
 }
 
 button:hover {
-    background-color: #434190;
+    background-color: #03255c;
 }

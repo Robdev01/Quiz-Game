@@ -12,7 +12,7 @@ CREATE TABLE questions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     quiz_id INT NOT NULL,
     question_text TEXT NOT NULL,
-    answer TEXT NOT NULL,
+    answer ENUM('verdadeiro', 'falso') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
 );

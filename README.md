@@ -52,7 +52,7 @@ Scripts de banco de dados.
 
 ### Administradores
 - **Cadastro e Login**: Administradores têm páginas dedicadas (`register-admin.html` e `login-admin.html`).
-- **Gerenciamento de Quizzes**: Administradores podem criar, editar e excluir quizzes no dashboard (`admin-dashboard.html`).
+- **Gerenciamento de Quizzes**: Administradores podem criar, editar e excluir perguntas dos quizzes no dashboard (`qui-details.html`).
 
 ---
 
@@ -98,7 +98,7 @@ As rotas são definidas no arquivo **`routes.php`** e seguem o padrão RESTful:
 
 ### Acesso
 - **Frontend**: Navegue para o diretório `Quiz-front` e abra `index.html`.
-- **Backend**: Use `localhost/public/index.php` para testar as rotas.
+- **Backend**: Use `php -S localhost:8000` para testar as rotas.
 
 ---
 
