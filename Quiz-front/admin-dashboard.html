@@ -4,78 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/Quiz-Game/Quiz-front/css/admin-dashboard.css">
+    <link rel="stylesheet" href="/Quiz-front/css/admin-dashboard.css">
 </head>
 <body>
     <div class="dashboard-container">
         <h1>Painel do Administrador</h1>
-        
+
         <!-- Seção de Cadastro de Quiz -->
         <section class="quiz-form-section">
             <div class="container">
-                <h1>Cadastrar Quiz</h1>
+                <h2>Cadastrar Quiz</h2>
                 <form id="quizForm">
                     <label for="quizTitle">Título do Quiz:</label>
                     <input type="text" id="quizTitle" name="quizTitle" required>
                     <button type="submit">Cadastrar Quiz</button>
                 </form>
-        
-                <h1>Cadastrar Pergunta</h1>
+            </div>
+        </section>
+
+        <!-- Seção de Cadastro de Perguntas -->
+        <section class="question-form-section">
+            <div class="container">
+                <h2>Cadastrar Pergunta</h2>
                 <form id="questionForm">
                     <label for="quizId">Selecione o Quiz:</label>
                     <select id="quizId" name="quizId" required>
-                        <!-- Opções de quizzes serão carregadas aqui dinamicamente -->
+                        <!-- Opções de quizzes serão carregadas dinamicamente -->
                     </select>
-        
+
                     <label for="questionText">Texto da Pergunta:</label>
                     <textarea id="questionText" name="questionText" required></textarea>
-        
+
                     <label for="answer">Resposta:</label>
-                    <input type="text" id="answer" name="answer" required>
-        
+                    <select id="answer" name="answer" required>
+                        <option value="verdadeiro">Verdadeiro</option>
+                        <option value="falso">Falso</option>
+                    </select>
+
                     <button type="submit">Cadastrar Pergunta</button>
                 </form>
             </div>
         </section>
-        
-        <!-- Seção de Quizzes Cadastrados -->
-        <table id="quizTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Descrição</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tbody id="quiz-list">
-                    <!-- Os quizzes serão carregados aqui dinamicamente -->
-                </tbody>
-            </table>
-        </section>
 
-        <!-- Seção de Usuários Cadastrados -->
-        <section class="user-list-section">
-            <h2>Usuários Cadastrados</h2>
+        <!-- Seção de Quizzes Cadastrados -->
+        <section class="quiz-list-section">
+            <h2>Quizzes Cadastrados</h2>
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Função</th>
+                        <th>Título</th>
                         <th>Criado em</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
-                <tbody id="user-list">
-                    <!-- Os usuários serão carregados aqui dinamicamente -->
+                <tbody id="quiz-list">
+                    <!-- Os quizzes serão carregados dinamicamente -->
                 </tbody>
             </table>
         </section>
-
     </div>
 
-    <script src="/Quiz-Game/Quiz-front/js/admin-dashboard.js"></script>
+    <script src="/Quiz-front/js/admin-dashboard.js"></script>
 </body>
 </html>

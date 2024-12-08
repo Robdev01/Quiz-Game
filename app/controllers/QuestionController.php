@@ -15,11 +15,17 @@ class QuestionController {
 
         $quiz_id = $data['quiz_id'] ?? null;
         $question_text = $data['question_text'] ?? null;
-        $answer = $data['answer'] ?? null;
+        $answer = strtolower($data['answer'] ?? '');
 
         if (!$quiz_id || !$question_text || !$answer) {
             http_response_code(400);
             echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
+            return;
+        }
+
+        if (!in_array($answer, ['verdadeiro', 'falso'])) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Answer must be "verdadeiro" or "falso"']);
             return;
         }
 
@@ -43,7 +49,7 @@ class QuestionController {
         $data = json_decode(file_get_contents('php://input'), true);
 
         $question_text = $data['question_text'] ?? null;
-        $answer = $data['answer'] ?? null;
+        $answer = strtolower($data['answer'] ?? '');
 
         if (!$question_text || !$answer) {
             http_response_code(400);
@@ -51,12 +57,23 @@ class QuestionController {
             return;
         }
 
-        $stmt = $this->pdo->prepare('UPDATE questions SET question_text = :question_text, answer = :answer WHERE id = :id');
-        if ($stmt->execute(['question_text' => $question_text, 'answer' => $answer, 'id' => $id])) {
-            echo json_encode(['status' => 'success', 'message' => 'Question updated successfully']);
-        } else {
-            http_response_code(404);
-            echo json_encode(['status' => 'error', 'message' => 'Question not found']);
+        if (!in_array($answer, ['verdadeiro', 'falso'])) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Answer must be "verdadeiro" or "falso"']);
+            return;
+        }
+
+        try {
+            $stmt = $this->pdo->prepare('UPDATE questions SET question_text = :question_text, answer = :answer WHERE id = :id');
+            if ($stmt->execute(['question_text' => $question_text, 'answer' => $answer, 'id' => $id])) {
+                echo json_encode(['status' => 'success', 'message' => 'Question updated successfully']);
+            } else {
+                http_response_code(404);
+                echo json_encode(['status' => 'error', 'message' => 'Question not found']);
+            }
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => 'Internal Server Error']);
         }
     }
 
@@ -85,6 +102,25 @@ class QuestionController {
             echo json_encode(['status' => 'error', 'message' => 'Question not found']);
         }
     }
+
+    public function getQuestionsByQuizId($quizId) {
+        try {
+            $stmt = $this->pdo->prepare('SELECT * FROM questions WHERE quiz_id = :quiz_id');
+            $stmt->execute(['quiz_id' => $quizId]);
+
+            $questions = $stmt->fetchAll();
+
+            if ($questions) {
+                echo json_encode(['status' => 'success', 'questions' => $questions]);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'No questions found for this quiz']);
+            }
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => 'Internal Server Error']);
+        }
+    }
+
 
     // Obter todas as Perguntas
     public function getAll() {

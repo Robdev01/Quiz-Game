@@ -107,41 +107,43 @@ function route($pdo) {
         $controller->get($questionId);
         break;
 
-        // Usuários
-        case $uri === '/users/register' && $method === 'POST':
-            $controller = new UserController($pdo);
-            $controller->register();
-            break;
-        
-        case $uri === '/users/login' && $method === 'POST':
-            $controller = new UserController($pdo);
-            $controller->login();
-            break;
-
-        case preg_match('/^\/users\/get\/(\d+)$/', $uri, $matches) && $method === 'GET':
-            $id = $matches[1];  // O ID está na primeira posição do array $matches
-            $controller = new UserController($pdo);
-            $controller->get($id);
-            break;
-        
-        case preg_match('/^\/users\/update\/(\d+)$/', $uri, $matches) && $method === 'PUT':
-            $id = $matches[1];  // O ID está na primeira posição do array $matches
-            $controller = new UserController($pdo);
-            $controller->update($id);
-            break;   
-        case $uri === '/users/todos' && $method === 'GET':
-            $controller = new UserController($pdo);
-            $controller->getAll();
-            break; 
-
-        // Participação
-        case preg_match('/^\/quizzes\/(\d+)\/answer$/', $uri, $matches) && $method === 'POST':
-            $quizId = $matches[1];
-            $controller = new QuizController($pdo);
-            break;
-
-        // Rota não encontrada
-        default:
+     case preg_match('/^\/quizzes\/(\d+)\/questions$/', $uri, $matches) && $method === 'GET':
+         $quizId = $matches[1];  // O ID do quiz está na primeira posição do array $matches
+         $controller = new QuestionController($pdo);
+         $controller->getQuestionsByQuizId($quizId);
+         break;
+     // Usuários
+     case $uri === '/users/register' && $method === 'POST':
+         $controller = new UserController($pdo);
+         $controller->register();
+         break;
+     
+     case $uri === '/users/login' && $method === 'POST':
+         $controller = new UserController($pdo);
+         $controller->login();
+         break;
+     case preg_match('/^\/users\/get\/(\d+)$/', $uri, $matches) && $method === 'GET':
+         $id = $matches[1];  // O ID está na primeira posição do array $matches
+         $controller = new UserController($pdo);
+         $controller->get($id);
+         break;
+     
+     case preg_match('/^\/users\/update\/(\d+)$/', $uri, $matches) && $method === 'PUT':
+         $id = $matches[1];  // O ID está na primeira posição do array $matches
+         $controller = new UserController($pdo);
+         $controller->update($id);
+         break;   
+     case $uri === '/users/todos' && $method === 'GET':
+         $controller = new UserController($pdo);
+         $controller->getAll();
+         break; 
+     // Participação
+     case preg_match('/^\/quizzes\/(\d+)\/answer$/', $uri, $matches) && $method === 'POST':
+         $quizId = $matches[1];
+         $controller = new QuizController($pdo);
+         break;
+     // Rota não encontrada
+     default:
             http_response_code(404);
             echo json_encode(['status' => 'error', 'message' => 'Route not found']);
             break;
