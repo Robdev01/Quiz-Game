@@ -22,7 +22,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
             // Se a resposta for bem-sucedida, armazena o token no localStorage (por exemplo)
             if (data.role === 'user') {  // Verifica se o token foi retornado
                  // Redireciona para a página inicial ou o painel de quiz
-                window.location.href = 'quiz.html';  // Você pode redirecionar para a página do quiz
+                window.location.href = 'quiz-selection.html';  // Você pode redirecionar para a página do quiz
             } 
         } else {
             // Caso contrário, exibe a mensagem de erro

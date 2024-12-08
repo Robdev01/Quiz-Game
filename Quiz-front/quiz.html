@@ -3,26 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz</title>
+    <title>Responder Quiz</title>
     <link rel="stylesheet" href="/Quiz-front/css/quiz.css">
 </head>
 <body>
-
-    <div class="container">
-        <h1>Quiz Game</h1>
-        
-        <!-- Exibição de quizzes -->
-        <div id="quiz-list" class="quiz-list">
-            <p>Carregando quizzes...</p>
+    <div class="quiz-container">
+        <h1 id="quiz-title">Quiz</h1>
+        <div id="question-container">
+            <!-- Pergunta será carregada dinamicamente -->
         </div>
-        
-        <div id="quiz-container" class="quiz-container" style="display: none;">
-            <h2 id="quiz-title"></h2>
-            <div id="questions-list"></div>
-            <button id="finish-quiz">Finalizar Quiz</button>
+        <div class="quiz-controls">
+            <button id="true-button">Verdadeiro</button>
+            <button id="false-button">Falso</button>
         </div>
+        <p id="score-display">Pontuação: 0</p>
     </div>
-
     <script src="/Quiz-front/js/quiz.js"></script>
 </body>
 </html>

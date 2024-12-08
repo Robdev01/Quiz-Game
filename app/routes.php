@@ -33,21 +33,6 @@ function route($pdo) {
             $controller->login();
             break;  
             
-        case preg_match('/^\/admins\/get\/(\d+)$/', $uri, $matches) && $method === 'GET':
-            $id = $matches[1];  // O ID está na primeira posição do array $matches
-            $controller = new AdminController($pdo);
-            $controller->get($id);
-            break;
-        
-        case preg_match('/^\/admins\/update\/(\d+)$/', $uri, $matches) && $method === 'PUT':
-            $id = $matches[1];  // O ID está na primeira posição do array $matches
-            $controller = new AdminController($pdo);
-            $controller->update($id);
-            break;;
-        case $uri === '/admins/todos' && $method === 'GET':
-            $controller = new AdminController($pdo);
-            $controller->getAll();
-            break;
         
        // **Quizzes**
     case $uri === '/quizzes/criar' && $method === 'POST':
@@ -122,21 +107,6 @@ function route($pdo) {
          $controller = new UserController($pdo);
          $controller->login();
          break;
-     case preg_match('/^\/users\/get\/(\d+)$/', $uri, $matches) && $method === 'GET':
-         $id = $matches[1];  // O ID está na primeira posição do array $matches
-         $controller = new UserController($pdo);
-         $controller->get($id);
-         break;
-     
-     case preg_match('/^\/users\/update\/(\d+)$/', $uri, $matches) && $method === 'PUT':
-         $id = $matches[1];  // O ID está na primeira posição do array $matches
-         $controller = new UserController($pdo);
-         $controller->update($id);
-         break;   
-     case $uri === '/users/todos' && $method === 'GET':
-         $controller = new UserController($pdo);
-         $controller->getAll();
-         break; 
      // Participação
      case preg_match('/^\/quizzes\/(\d+)\/answer$/', $uri, $matches) && $method === 'POST':
          $quizId = $matches[1];

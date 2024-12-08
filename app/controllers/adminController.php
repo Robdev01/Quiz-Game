@@ -50,7 +50,6 @@ class AdminController {
     }
 
     // Login de administradores
-   // Login de administradores
 public function login() {
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -102,60 +101,6 @@ public function login() {
         ]);
     }
 }
-
-    // Método GET - Para obter dados do administrador
-    public function get($id) {
-        // Verifique se o ID é válido
-        if (!$id) {
-            http_response_code(400);
-            echo json_encode(['status' => 'error', 'message' => 'Admin ID is required']);
-            return;
-        }
-
-        $stmt = $this->pdo->prepare('SELECT id, name, email, role, created_at FROM users WHERE id = :id AND role = :role');
-        $stmt->execute([
-            'id' => $id,
-            'role' => 'admin', // Apenas administradores
-        ]);
-
-        $admin = $stmt->fetch();
-
-        if (!$admin) {
-            http_response_code(404);
-            echo json_encode(['status' => 'error', 'message' => 'Admin not found']);
-            return;
-        }
-
-        echo json_encode(['status' => 'success', 'admin' => $admin]);
-    }
-    // Método PUT - Para atualizar dados do administrador
-    public function update($id) {
-        $data = json_decode(file_get_contents('php://input'), true);
-
-        $name = $data['name'] ?? null;
-        $email = $data['email'] ?? null;
-        $password = $data['password'] ?? null;
-
-        if (!$name || !$email) {
-            http_response_code(400);
-            echo json_encode(['status' => 'error', 'message' => 'Name and email are required']);
-            return;
-        }
-
-        // Atualiza senha, se fornecida
-        $passwordHash = $password ? password_hash($password, PASSWORD_BCRYPT) : null;
-
-        $stmt = $this->pdo->prepare('UPDATE users SET name = :name, email = :email, password_hash = :password_hash WHERE id = :id AND role = :role');
-        $stmt->execute([
-            'name' => $name,
-            'email' => $email,
-            'password_hash' => $passwordHash,
-            'id' => $id,
-            'role' => 'admin',
-        ]);
-
-        echo json_encode(['status' => 'success', 'message' => 'Admin updated successfully']);
-    }
     // Método GET - Para obter todos os administradores
     public function getAll() {
         $stmt = $this->pdo->prepare('SELECT id, name, email, role, created_at FROM users WHERE role = :role');

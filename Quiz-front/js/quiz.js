@@ -1,72 +1,61 @@
-document.addEventListener("DOMContentLoaded", async function () {
-    // URL da sua API
-    const apiUrl = 'http://localhost:8000/quizzes/todos';  // Substitua com a URL correta da sua API
+document.addEventListener("DOMContentLoaded", () => {
+    const questionContainer = document.getElementById("question-container");
+    const trueButton = document.getElementById("true-button");
+    const falseButton = document.getElementById("false-button");
+    const scoreDisplay = document.getElementById("score-display");
 
-    // Função para carregar todos os quizzes
-    async function loadQuizzes() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const quizId = urlParams.get("quiz_id");
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let questions = [];
+
+    async function loadQuestions() {
         try {
-            const response = await fetch(apiUrl);
+            const response = await fetch(`http://localhost:8000/quizzes/${quizId}/questions`);
             const data = await response.json();
 
-            if (response.ok) {
-                const quizList = document.getElementById('quiz-list');
-                quizList.innerHTML = '';  // Limpa a lista antes de adicionar novos quizzes
-
-                // Exibe cada quiz
-                data.data.forEach(quiz => {
-                    const quizItem = document.createElement('div');
-                    quizItem.className = 'quiz-item';
-                    quizItem.innerHTML = `
-                        <h3>${quiz.title}</h3>
-                        <button onclick="showQuestions(${quiz.id})">Ver Perguntas</button>
-                    `;
-                    quizList.appendChild(quizItem);
-                });
+            if (data.status === "success" && data.questions) {
+                questions = data.questions;
+                loadQuestion();
             } else {
-                alert('Erro ao carregar quizzes');
+                questionContainer.innerHTML = "<p>Nenhuma pergunta encontrada.</p>";
             }
         } catch (error) {
-            console.error('Erro ao carregar quizzes:', error);
+            console.error("Erro ao carregar perguntas:", error);
         }
     }
 
-    // Função para exibir as perguntas de um quiz
-    async function showQuestions(quizId) {
-        try {
-            const response = await fetch(`${apiUrl}/${quizId}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                const questionsContainer = document.getElementById('quiz-questions');
-                questionsContainer.innerHTML = '';  // Limpa as perguntas antigas
-
-                const quiz = data.data[0];  // Pegando o primeiro (e único) quiz, já que estamos fazendo por ID
-
-                const quizTitle = document.getElementById('quiz-title');
-                quizTitle.textContent = `Perguntas do Quiz: ${quiz.title}`;
-
-                // Exibe cada pergunta
-                quiz.questions.forEach(question => {
-                    const questionItem = document.createElement('div');
-                    questionItem.className = 'question-item';
-                    questionItem.innerHTML = `
-                        <p><strong>Questão:</strong> ${question.text}</p>
-                        <p><strong>Descrição:</strong> ${question.description}</p>
-                    `;
-                    questionsContainer.appendChild(questionItem);
-                });
-
-                // Exibe a seção de perguntas
-                document.getElementById('quiz-list').style.display = 'none';
-                document.getElementById('quiz-container').style.display = 'block';
-            } else {
-                alert('Erro ao carregar perguntas');
-            }
-        } catch (error) {
-            console.error('Erro ao carregar perguntas:', error);
+    function loadQuestion() {
+        if (currentQuestionIndex < questions.length) {
+            const question = questions[currentQuestionIndex];
+            questionContainer.innerHTML = `<p>${question.question_text}</p>`;
+        } else {
+            endQuiz();
         }
     }
 
-    // Carregar os quizzes quando a página carregar
-    loadQuizzes();
+    function checkAnswer(userAnswer) {
+        const question = questions[currentQuestionIndex];
+        if (userAnswer === question.answer) {
+            score++;
+        } else {
+            score--;
+        }
+        scoreDisplay.textContent = `Pontuação: ${score}`;
+        currentQuestionIndex++;
+        loadQuestion();
+    }
+
+    function endQuiz() {
+        questionContainer.innerHTML = `<p>Quiz finalizado! Sua pontuação: ${score}</p>`;
+        trueButton.style.display = "none";
+        falseButton.style.display = "none";
+    }
+
+    trueButton.addEventListener("click", () => checkAnswer("verdadeiro"));
+    falseButton.addEventListener("click", () => checkAnswer("falso"));
+
+    loadQuestions();
 });
